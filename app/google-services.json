@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "360616040289",
+    "project_id": "conciertodq",
+    "storage_bucket": "conciertodq.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360616040289:android:c205f2269bb623164e1720",
+        "android_client_info": {
+          "package_name": "com.example.futbol_personalsoft"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "360616040289-0tbdbvsiak9i50glldk7tegld1is6o82.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2aN0JmW-ilZzyua955HJAhlVB41RpeI8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "360616040289-0tbdbvsiak9i50glldk7tegld1is6o82.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360616040289:android:e342ad43ae87d2814e1720",
+        "android_client_info": {
+          "package_name": "com.example.proyectofinalmoviles2freddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "360616040289-0tbdbvsiak9i50glldk7tegld1is6o82.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2aN0JmW-ilZzyua955HJAhlVB41RpeI8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "360616040289-0tbdbvsiak9i50glldk7tegld1is6o82.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
