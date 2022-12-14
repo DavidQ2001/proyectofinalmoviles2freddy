@@ -25,8 +25,8 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     EditText jetnombre, jetcedula;
-    CheckBox jcbactivo,jcbgeneral,jcbpreferencial,jcbvip;
-    String nombre, cedula, categoria,ident_doc;
+    CheckBox jcbactivo, jcbgeneral, jcbpreferencial, jcbvip;
+    String nombre, cedula, categoria, ident_doc;
     boolean respuesta;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -49,22 +49,20 @@ public class MainActivity extends AppCompatActivity {
 
         if (nombre.isEmpty() || cedula.isEmpty()) {
             Toast.makeText(this, "Todos los campos son requeridos", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             if (jcbpreferencial.isChecked())
                 categoria = "Preferencial";
-            else
-                if (jcbgeneral.isChecked())
+            else if (jcbgeneral.isChecked())
                 categoria = "General";
-
             else
                 categoria = "Vip";
+
             // Create a new user with a first and last name
             Map<String, Object> invitados = new HashMap<>();
             invitados.put("Nombre", nombre);
             invitados.put("Cedula", cedula);
             invitados.put("Categoria", categoria);
-            invitados.put("Activo","si");
+            invitados.put("Activo", "si");
 
             // Add a new document with a generated ID
             db.collection("concierto")
@@ -73,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
                             Toast.makeText(MainActivity.this, "Documento adicionado", Toast.LENGTH_SHORT).show();
-                            Limpiar_campos();
+                            Limpiar_campos_adicionar();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -85,43 +83,48 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void Consultar(View view){
+    public void Consultar(View view) {
         Buscar();
     }
 
-    private void Buscar(){
-        respuesta=false;
-        cedula=jetcedula.getText().toString();
-        if (cedula.isEmpty()){
+    private void Buscar() {
+        respuesta = false;
+        cedula = jetcedula.getText().toString();
+        if (cedula.isEmpty()) {
             Toast.makeText(this, "Codigo es requerido", Toast.LENGTH_SHORT).show();
             jetcedula.requestFocus();
-        }else{
+        } else {
             db.collection("concierto")
-                    .whereEqualTo("Cedula",cedula)
+                    .whereEqualTo("Cedula", cedula)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    respuesta=true;
-                                    ident_doc=document.getId();
-                                    jetnombre.setText(document.getString("Nombre"));
-                                    jetcedula.setText(document.getString("Cedula"));
+                                    if(document.getString("Activo").equalsIgnoreCase("no")){
+                                        Toast.makeText(MainActivity.this, "El registro existe pero esta inactivo", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else{
+                                        respuesta = true;
+                                        ident_doc = document.getId();
+                                        jetnombre.setText(document.getString("Nombre"));
+                                        jetcedula.setText(document.getString("Cedula"));
 
-                                    if (document.getString("Categoria").equals("Vip"))
-                                        jcbvip.setChecked(true);
-                                    else
-                                    if (document.getString("Categoria").equals("Preferencial"))
-                                        jcbpreferencial.setChecked(true);
-                                    else
-                                        jcbgeneral.setChecked(true);
-                                    if (document.getString("Activo").equals("si"))
-                                        jcbactivo.setChecked(true);
-                                    else
-                                        jcbactivo.setChecked(false);
-                                    //Log.d(TAG, document.getId() + " => " + document.getData());
+                                        if (document.getString("Categoria").equals("Vip"))
+                                            jcbvip.setChecked(true);
+                                        else if (document.getString("Categoria").equals("Preferencial"))
+                                            jcbpreferencial.setChecked(true);
+                                        else
+                                            jcbgeneral.setChecked(true);
+                                        if (document.getString("Activo").equals("si"))
+                                            jcbactivo.setChecked(true);
+                                        else
+                                            jcbactivo.setChecked(false);
+                                        //Log.d(TAG, document.getId() + " => " + document.getData());
+                                    }
                                 }
+
                             } else {
                                 // Log.w(TAG, "Error getting documents.", task.getException());
                             }
@@ -131,21 +134,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void Anular(View view){
+    public void Anular(View view) {
 
-        cedula=jetcedula.getText().toString();
-        nombre=jetnombre.getText().toString();
+        cedula = jetcedula.getText().toString();
+        nombre = jetnombre.getText().toString();
 
-        if (cedula.isEmpty() || nombre.isEmpty()){
+        if (cedula.isEmpty() || nombre.isEmpty()) {
             Toast.makeText(this, "Los campos son requeridos", Toast.LENGTH_SHORT).show();
             jetcedula.requestFocus();
-        }
-        else {
+        } else {
             if (respuesta == true) {
                 if (jcbvip.isChecked())
                     categoria = "Vip";
-                else
-                    if (jcbpreferencial.isChecked())
+                else if (jcbpreferencial.isChecked())
                     categoria = "Preferencial";
                 else
                     categoria = "General";
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 invitados.put("Cedula", cedula);
                 invitados.put("Nombre", nombre);
                 invitados.put("Categoria", categoria);
-                invitados.put("Activo","no");
+                invitados.put("Activo", "no");
 
                 // Modify a new document with a generated ID
                 db.collection("concierto").document(ident_doc)
@@ -181,8 +182,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    public void Cancelar(View view){
+    public void Cancelar(View view) {
         Limpiar_campos();
     }
 
@@ -195,6 +195,18 @@ public class MainActivity extends AppCompatActivity {
         jcbpreferencial.setChecked(false);
         jcbvip.setChecked(true);
         jetcedula.requestFocus();
-        respuesta=false;
+        respuesta = false;
     }
+
+    private void Limpiar_campos_adicionar() {
+
+        jetcedula.setText("");
+        jetnombre.setText("");
+        jcbactivo.setChecked(false);
+        jcbgeneral.setChecked(false);
+        jcbpreferencial.setChecked(false);
+        jetcedula.requestFocus();
+        respuesta = false;
+    }
+
 }
